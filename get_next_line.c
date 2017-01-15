@@ -5,7 +5,7 @@
 ** Login   <marin.brunel@epitech.eu>
 ** 
 ** Started on  Wed Dec 21 16:18:40 2016 maje
-** Last update Sun Jan 15 22:50:12 2017 maje
+** Last update Sun Jan 15 22:51:56 2017 maje
 */
 
 #include "get_next_line.h"
