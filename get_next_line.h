@@ -5,7 +5,7 @@
 ** Login   <marin.brunel@epitech.eu>
 ** 
 ** Started on  Mon Jan  2 10:04:51 2017 maje
-** Last update Sun Jan 15 22:34:59 2017 maje
+** Last update Sun Jan 15 23:31:37 2017 maje
 */
 
 #ifndef GET_NEXT_LINE_H_
@@ -16,9 +16,10 @@
 
 #endif /* READ_SIZE */
 
-char    *get_next_line(const int fd);
-char	*fill_buffer(char *buffer, int fd);
-
-
+char		*get_next_line(const int fd);
+char		*fill_buffer(char *buffer, int fd);
+static int      my_strlen(char *str);
+char		*my_strcat(char *str, char *src);
+char		*fill_res(char *buff, char **buffer);
 
 #endif /* GET_NEXT_LINE_H_ */
