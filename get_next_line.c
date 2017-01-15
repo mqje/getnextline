@@ -5,7 +5,7 @@
 ** Login   <marin.brunel@epitech.eu>
 ** 
 ** Started on  Wed Dec 21 16:18:40 2016 maje
-** Last update Sun Jan 15 14:32:18 2017 maje
+** Last update Sun Jan 15 22:50:12 2017 maje
 */
 
 #include "get_next_line.h"
@@ -21,6 +21,8 @@ static int	my_strlen(char *str)
   int	i;
 
   i = 0;
+  if (str == NULL)
+    return (0);
   while (str[i] != '\0')
     {
       i++;
@@ -30,58 +32,76 @@ static int	my_strlen(char *str)
 
 char	*my_strcat(char *str, char *src)
 {
+  char	*res;
   int	i;
   int	j;
-  char	*res;
 
-  if ((res = malloc(sizeof(char) * (my_strlen(src) + my_strlen(str)))) == NULL)
+  if (str == NULL && src == NULL)
     return (NULL);
+  else if (str == NULL)
+    return (src);
+  else if (src == NULL)
+    return (str);
+  res = malloc(sizeof(char) * (my_strlen(str) + my_strlen(src) + 1));
   i = -1;
   j = -1;
   while (str[++i])
     res[++j] = str[i];
   i = -1;
   while (src[++i])
-    res[++j] = str[i];
+    res[++j] = src[i];
+  res[++j] = 0;
   return (res);
 }
 
-void	fill_buffer(char **str, const int fd)
+char	*fill_buffer(char *str, const int fd)
 {
   int	i;
-  char	buffer[READ_SIZE];
 
   i = 0;
-  if ((*str = malloc(sizeof(char) * (READ_SIZE + 1))) == NULL)
-    return ;
-  while (read(fd, buffer, READ_SIZE) != 0)
+  if ((i = read(fd, str, READ_SIZE)) <= 0)
+    return (NULL);
+  str[i] = '\0';
+  return (str);
+}
+
+char	*fill_res(char *buff, char **buffer)
+{
+  int	i;
+
+  i = -1;
+  while (**buffer != '\n' && **buffer != '\0')
     {
-      *str[i] = buffer[i];
-      i++;
+      buff[++i] = **buffer;
+      (*buffer)++;
     }
+  buff[++i] = 0;
+  return (buff);
 }
 
 char	*get_next_line(const int fd)
 {
-  static char	*buffer;
+  static char	*buffer = NULL;
   char		*buff;
 
-  if ((buffer = malloc(sizeof(char) * (READ_SIZE + 1))) == NULL)
+  if (fd < 0)
     return (NULL);
   if ((buff = malloc(sizeof(char) * (READ_SIZE + 1))) == NULL)
     return (NULL);
-  if (buffer == NULL)
+  if (buffer == NULL || buffer[0] == 0)
     {
-      fill_buffer(&buff, fd);
+      if ((buffer = malloc(sizeof(char) * (READ_SIZE + 1))) == NULL)
+	return (NULL);
+      if ((buffer = fill_buffer(buffer, fd)) == NULL)
+	return (NULL);
     }
-  buffer = my_strcat(buff, buffer);
-  return (buffer);
+  if (buffer == NULL)
+    return (NULL);
+  fill_res(buff, &buffer);
+  if (buffer[0] == '\n')
+    buffer++;
+  else
+    buff = my_strcat(buff, get_next_line(fd));
+  return (buff);
 }
 
-void	main(int ac, char **av)
-{
-  int  fd;
-
-  fd = open(av[1], O_RDONLY);
-  close(fd);
-}
